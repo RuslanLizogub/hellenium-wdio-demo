@@ -6,7 +6,7 @@ A complete demonstration of Healenium self-healing automation with WebDriverIO, 
 
 ### Prerequisites
 - Docker and Docker Compose installed
-- Node.js (v14 or higher)
+- Node.js (v20 or higher)
 - Git
 
 ### Step-by-Step Setup
