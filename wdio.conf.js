@@ -1,11 +1,11 @@
 exports.config = {
-    // Указываем тесты
+    // Test specifications
     specs: ['./test/specs/**/*.js'],
     
-    // Максимум одновременных тестов
+    // Maximum number of simultaneous tests
     maxInstances: 1,
     
-    // Только Chrome
+    // Chrome browser only
     capabilities: [{
         browserName: 'chrome',
         'goog:chromeOptions': {
@@ -13,7 +13,7 @@ exports.config = {
         }
     }],
     
-    // Уровень логирования
+    // Log level
     logLevel: 'info',
     
     // Test runner services
@@ -27,16 +27,16 @@ exports.config = {
     // Framework to use for testing
     framework: 'mocha',
     
-    // Репортер
+    // Reporter
     reporters: ['spec'],
     
-    // Настройки Mocha
+    // Mocha options
     mochaOpts: {
         ui: 'bdd',
         timeout: 60000
     },
     
-    // Хуки
+    // Hooks
     onPrepare: function () {
         console.log('🩹 Starting Healenium Demo...');
         console.log('📊 Report: http://localhost:7878/healenium/report/');

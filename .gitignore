@@ -1,1 +1,55 @@
-node_modules
+# Dependencies
+node_modules/
+yarn.lock
+package-lock.json
+
+# Logs
+logs/
+*.log
+yarn.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Screenshots and test artifacts
+screenshots/
+test-results/
+allure-results/
+allure-report/
+
+# Database files
+db/
+*.db
+*.sqlite
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Docker
+.dockerignore
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp

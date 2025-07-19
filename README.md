@@ -1,158 +1,264 @@
-# Healenium + WebDriverIO Demo
+# 🩹 Healenium WebDriverIO Demo
 
-Minimal demonstration of **Healenium** integration with **WebDriverIO** for automatic locator self-healing in tests.
+A complete demonstration of Healenium self-healing automation with WebDriverIO, featuring a custom demo website for testing.
 
-## What is Healenium?
+## 🚀 Quick Start
 
-Healenium is a self-healing library for Selenium that automatically fixes broken locators using machine learning. When an element is not found, Healenium analyzes the DOM and finds the most suitable replacement.
+### Prerequisites
+- Docker and Docker Compose installed
+- Node.js (v14 or higher)
+- Git
 
-**Key Feature:** When a locator breaks, Healenium automatically suggests and applies alternative locators, making tests more resilient to UI changes.
+### Step-by-Step Setup
 
-## How Healenium Integration Works
-
-Healenium uses a **proxy approach** for WebDriverIO:
-
-1. **WebDriverIO** connects to **hlm-proxy** (port 8085) instead of Selenium Grid directly
-2. **hlm-proxy** forwards requests to **Selenium Grid** (port 4444)
-3. **hlm-proxy** intercepts element-finding operations and triggers healing when needed
-4. **healenium-backend** (port 7878) processes healing logic using ML
-5. **selector-imitator** (port 8000) converts healed locators to convenient format
-
-```
-WebDriverIO Test → hlm-proxy:8085 → Selenium Grid:4444 → Chrome Browser
-                       ↓
-                  Healenium Backend:7878 ← → selector-imitator:8000
-                       ↓
-                  PostgreSQL Database
-```
-
-## Requirements
-
-- **Node.js v22.17.1 LTS** (recommended)
-- **Docker Desktop**
-
-## Quick Start
-
-### 1. Install Node.js
-
+#### 1. Clone and Setup
 ```bash
-# Install Node.js v22.17.1 LTS
-nvm install 22.17.1
-nvm use 22.17.1
-```
-
-### 2. Install Dependencies
-
-```bash
+git clone <repository-url>
+cd hellenium-wdio-demo
 npm install
 ```
 
-### 3. Start Healenium Infrastructure
-
+#### 2. Start Everything (One Command)
 ```bash
-# Start Docker containers
-docker compose up -d
-
-# Check container status
-docker compose ps
+./start-demo.sh
 ```
 
-**Verify all containers are running:**
-- ✅ `hlm-proxy` on port 8085 (key component!)
-- ✅ `healenium` backend on port 7878
-- ✅ `selector-imitator` on port 8000
-- ✅ `selenium-hub` on port 4444
-- ✅ `node-chrome` connected to hub
-- ✅ `postgres-db` on port 5432
+This script will:
+- Start the demo website (http://localhost:8080)
+- Start Healenium infrastructure (backend, proxy, Selenium Grid)
+- Install dependencies
+- Show you all available URLs
 
-### 4. Run Tests
-
+#### 3. Run Tests
 ```bash
 npm test
 ```
 
-## Key Configuration
-
-### WebDriverIO Configuration (wdio.conf.js)
-
-```javascript
-// Connect to Healenium proxy instead of Selenium Grid directly
-services: [],
-hostname: '127.0.0.1',
-port: 8085,           // hlm-proxy port (NOT 4444!)
-protocol: 'http',
+#### 4. Stop Everything
+```bash
+./stop-demo.sh
 ```
 
-### Docker Infrastructure
+## 📋 What's Included
 
-The setup includes:
-- **hlm-proxy:2.1.6** - Proxy between WebDriverIO and Selenium
-- **healenium/hlm-backend:3.4.8** - Self-healing logic
-- **healenium/hlm-selector-imitator:1.6** - Locator conversion
-- **selenium/hub:latest** - Selenium Grid Hub
-- **selenium/node-chrome:latest** - Chrome browser node
-- **postgres:15.5-alpine** - Database for healing data
+### 🌐 Demo Website
+- **URL**: http://localhost:8080
+- **Two-page application**: Login form → Welcome page
+- **Editable**: You can modify HTML to test self-healing
+- **Docker-based**: Easy to rebuild and deploy
 
-## Healenium Reports
+#### Website Structure
+**Login Page (`/`)**:
+- Username field: `name="username"` (JavaScript uses this)
+- Password field: `name="password"` (JavaScript uses this)
+- Login button: `type="submit"`
+- Form: `id="loginForm"`
 
-- **Report URL**: http://localhost:7878/healenium/report/
-- **Backend API**: http://localhost:7878/healenium/
-- View healing statistics and successful/failed healing attempts
+**Welcome Page (`/welcome.html`)**:
+- Welcome message: `h1` with text "Welcome!"
+- Success message: `div` with class "success-message"
+- User info section: `div` with class "user-info"
+- Username display: `span` with `id="displayUsername"`
+- Back button: `a` with class "back-button"
 
-## Test Example
+### 🩹 Healenium Infrastructure
+- **Backend**: http://localhost:7878
+- **Reports**: http://localhost:7878/healenium/report/
+- **Selenium Hub**: http://localhost:4444
+- **VNC Browser**: http://localhost:7900 (password: 123456)
 
-```javascript
-describe('Simple Healenium Demo', () => {
-    it('should search Google and show self-healing', async () => {
-        await browser.url('https://www.google.com');
-        
-        // This locator will be auto-healed if it breaks
-        const searchBox = await $('[name="q"]');
-        await searchBox.setValue('Healenium demo');
-        await browser.keys('Enter');
-        
-        // Healenium will track and heal any broken locators
-        await browser.waitUntil(async () => {
-            const title = await browser.getTitle();
-            return title.includes('Healenium');
-        });
-    });
-});
+## 🧪 Testing Self-Healing
+
+### Step 1: Run Tests with Correct Selectors
+```bash
+npm test
 ```
 
-## How to Test Self-Healing
+### Step 2: Modify Website Elements
+Edit `demo-website/index.html` or `demo-website/welcome.html`:
+- Change element IDs
+- Modify CSS classes
+- Update text content
+- Add/remove elements
 
-1. Run test successfully first time
-2. Change a locator in the test to break it
-3. Run test again - Healenium should heal it automatically
-4. Check healing report at http://localhost:7878/healenium/report/
-
-## Troubleshooting
-
-**Issue**: Tests fail with connection errors
-- **Solution**: Ensure all Docker containers are running (`docker compose ps`)
-- Check hlm-proxy is accessible: `curl http://localhost:8085`
-
-**Issue**: Healing not working
-- **Solution**: Verify WebDriverIO connects to port 8085 (hlm-proxy), not 4444
-- Check logs: `docker logs hlm-proxy`
-
-## Architecture
-
-```
-[WebDriverIO Test] 
-       ↓ (port 8085)
-[hlm-proxy] ←→ [healenium-backend] ←→ [postgres-db]
-       ↓                ↓
-[selenium-hub] ←→ [selector-imitator]
-       ↓
-[node-chrome]
+### Step 3: Redeploy Website
+```bash
+./redeploy-website.sh
 ```
 
-**The key difference from regular Selenium:** WebDriverIO connects to **hlm-proxy:8085** instead of **selenium-hub:4444** directly. This allows Healenium to intercept and heal broken locators transparently.
+### Step 4: Run Tests Again
+```bash
+npm test
+```
 
-## Official Documentation
+**Healenium should automatically heal broken selectors!**
 
-- [Healenium GitHub](https://github.com/healenium/healenium)
-- [Healenium Docs](https://healenium.io/)
-- [WebDriverIO Integration Example](https://github.com/healenium/healenium-example-webdriverio)
+## 📁 Project Structure
+
+```
+hellenium-wdio-demo/
+├── demo-website/           # Custom demo website
+│   ├── index.html         # Login page
+│   ├── welcome.html       # Welcome page
+│   ├── Dockerfile         # Website container
+│   ├── nginx.conf         # Web server config
+│   └── docker-compose.yml # Website orchestration
+├── test/
+│   └── specs/
+│       └── demo-website-test.spec.js  # Comprehensive test
+├── docker-compose.yml     # Healenium infrastructure
+├── wdio.conf.js          # WebDriverIO configuration
+├── package.json          # Dependencies
+├── start-demo.sh         # Start everything
+├── stop-demo.sh          # Stop everything
+├── redeploy-website.sh   # Redeploy website after changes
+└── README.md             # This file
+```
+
+## 🔧 Manual Setup (Alternative)
+
+If you prefer manual setup instead of using scripts:
+
+### 1. Start Demo Website
+```bash
+cd demo-website
+docker compose up -d --build
+cd ..
+```
+
+### 2. Start Healenium Infrastructure
+```bash
+docker compose up -d
+```
+
+### 3. Install Dependencies
+```bash
+npm install
+```
+
+### 4. Run Tests
+```bash
+npm test
+```
+
+## 🎯 Test Scenarios
+
+### Basic Login Test
+- Navigate to login page
+- Fill username and password
+- Click login button
+- Verify welcome page
+
+### Self-Healing Test
+- Use broken selectors (typos, wrong classes)
+- Healenium automatically finds correct elements
+- Tests pass despite selector changes
+
+## 📊 Monitoring
+
+### Live Browser View
+- **VNC**: http://localhost:7900 (password: 123456)
+- **Browser**: http://localhost:4444
+
+### Healenium Reports
+- **Main Report**: http://localhost:7878/healenium/report/
+- **Selectors**: http://localhost:7878/healenium/selectors/
+
+### Container Logs
+```bash
+# Demo website
+docker logs healenium-demo-website
+
+# Healenium backend
+docker logs healenium
+
+# Selenium Hub
+docker logs selenium-hub
+```
+
+## 🛠️ Development
+
+### Modify Website
+1. Edit files in `demo-website/`
+2. Run: `./redeploy-website.sh`
+3. Test changes
+
+### Add New Tests
+1. Create new `.spec.js` file in `test/specs/`
+2. Use broken selectors to test healing
+3. Run: `npm test`
+
+### Customize Healenium
+- Edit `docker-compose.yml` for infrastructure changes
+- Modify `wdio.conf.js` for WebDriverIO settings
+
+### Demo Website Docker Commands
+```bash
+# Build demo website image
+cd demo-website
+docker build -t healenium-demo-website .
+
+# Run demo website only
+docker compose up -d
+
+# Stop demo website
+docker compose down
+
+# View demo website logs
+docker logs healenium-demo-website
+
+# Clean rebuild demo website
+docker compose down
+docker system prune -f
+docker compose up -d --build
+cd ..
+```
+
+## 🔍 Troubleshooting
+
+### Port Conflicts
+If ports are busy, modify in respective `docker-compose.yml`:
+```yaml
+ports:
+  - "8081:80"  # Change port number
+```
+
+### Container Issues
+```bash
+# Check container status
+docker ps
+
+# View logs
+docker logs <container-name>
+
+# Restart specific service
+docker compose restart <service-name>
+```
+
+### Test Failures
+1. Check if website is accessible: http://localhost:8080
+2. Verify Healenium is running: http://localhost:7878
+3. Check VNC for browser issues: http://localhost:7900
+
+### Cache Issues
+If you see old content after changes:
+- Press Cmd+Shift+R (Mac) or Ctrl+Shift+R (Windows)
+- Or open DevTools (F12) → right-click refresh → 'Empty Cache and Hard Reload'
+
+## 📚 Learn More
+
+- [Healenium Documentation](https://healenium.io/)
+- [WebDriverIO Documentation](https://webdriver.io/)
+- [Selenium Grid](https://www.selenium.dev/documentation/grid/)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+---
+
+**Happy Testing! 🧪✨**

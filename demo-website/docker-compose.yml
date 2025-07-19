@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  demo-website:
+    build: .
+    container_name: healenium-demo-website
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    networks:
+      - demo-network
+
+networks:
+  demo-network:
+    name: demo-network 

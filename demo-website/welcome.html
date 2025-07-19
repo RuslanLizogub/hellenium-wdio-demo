@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - Healenium Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .welcome-container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            width: 500px;
+            text-align: center;
+        }
+        .welcome-header {
+            margin-bottom: 30px;
+        }
+        .welcome-header h1 {
+            color: #333;
+            margin: 0;
+            font-size: 28px;
+        }
+        .welcome-header p {
+            color: #666;
+            margin: 10px 0 0 0;
+            font-size: 16px;
+        }
+        .user-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .user-info h2 {
+            color: #333;
+            margin: 0 0 10px 0;
+            font-size: 20px;
+        }
+        .user-info p {
+            color: #666;
+            margin: 5px 0;
+            font-size: 16px;
+        }
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border: 1px solid #c3e6cb;
+        }
+        .back-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+        .back-button:hover {
+            transform: translateY(-2px);
+        }
+        .demo-info {
+            margin-top: 30px;
+            padding: 20px;
+            background: #e9ecef;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+        .demo-info h3 {
+            margin: 0 0 15px 0;
+            color: #333;
+        }
+        .demo-info ul {
+            margin: 0;
+            padding-left: 20px;
+            text-align: left;
+        }
+        .demo-info li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="welcome-container">
+        <div class="welcome-header">
+            <h1>🎉 Welcome!</h1>
+            <p>You have successfully logged in</p>
+        </div>
+        
+        <div class="success-message">
+            <strong>✅ Login Successful!</strong><br>
+            Your authentication was completed successfully.
+        </div>
+        
+        <div class="user-info">
+            <h2>👤 User Information</h2>
+            <p><strong>Username:</strong> <span id="displayUsername">Guest</span></p>
+            <p><strong>Login Time:</strong> <span id="loginTime"></span></p>
+            <p><strong>Session ID:</strong> <span id="sessionId"></span></p>
+        </div>
+        
+        <a href="/" class="back-button">← Back to Login</a>
+        
+        <div class="demo-info">
+            <h3>🧪 Test Elements on This Page:</h3>
+            <ul>
+                <li><strong>Welcome message:</strong> h1 with text "Welcome!"</li>
+                <li><strong>Success message:</strong> div with class "success-message"</li>
+                <li><strong>User info section:</strong> div with class "user-info"</li>
+                <li><strong>Username display:</strong> span with id="displayUsername"</li>
+                <li><strong>Back button:</strong> a with class "back-button"</li>
+                <li><strong>Demo info:</strong> div with class "demo-info"</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Get username from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const username = urlParams.get('username') || 'Guest';
+        
+        // Display user information
+        document.getElementById('displayUsername').textContent = username;
+        document.getElementById('loginTime').textContent = new Date().toLocaleString();
+        document.getElementById('sessionId').textContent = Math.random().toString(36).substr(2, 9);
+    </script>
+</body>
+</html> 

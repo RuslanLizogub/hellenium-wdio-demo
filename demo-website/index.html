@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healenium Demo - Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            width: 350px;
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .login-header h1 {
+            color: #333;
+            margin: 0;
+            font-size: 24px;
+        }
+        .login-header p {
+            color: #666;
+            margin: 10px 0 0 0;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .login-button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .login-button:hover {
+            transform: translateY(-2px);
+        }
+        .demo-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+        .demo-info h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .demo-info ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>🩹 Healenium Demo</h1>
+            <p>Test Self-Healing Automation</p>
+        </div>
+        
+        <form id="loginForm" action="/welcome.html" method="GET">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" placeholder="Enter username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" placeholder="Enter password" required>
+            </div>
+            
+            <button type="submit" class="login-button">Login</button>
+        </form>
+        
+        <div class="demo-info">
+            <h3>🧪 Test Elements:</h3>
+            <ul>
+                <li><strong>Username field:</strong> name="username" (JavaScript uses this)</li>
+                <li><strong>Password field:</strong> name="password" (JavaScript uses this)</li>
+                <li><strong>Login button:</strong> type="submit"</li>
+                <li><strong>Form:</strong> id="loginForm"</li>
+            </ul>
+            <p><strong>💡 Note:</strong> JavaScript now uses <code>name</code> attributes instead of <code>id</code> for resilience!</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Find username field by name attribute instead of id (more resilient)
+            const usernameField = document.querySelector('input[name="username"]');
+            const passwordField = document.querySelector('input[name="password"]');
+            
+            const username = usernameField ? usernameField.value : '';
+            const password = passwordField ? passwordField.value : '';
+            
+            if (username && password) {
+                // Redirect to welcome page with username
+                window.location.href = `/welcome.html?username=${encodeURIComponent(username)}`;
+            } else {
+                alert('Please fill in both username and password');
+            }
+        });
+    </script>
+</body>
+</html> 
